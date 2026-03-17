@@ -1,17 +1,14 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-// Đảm bảo đường dẫn này đúng với file books.ts bạn đã tạo
+// Import dữ liệu từ file kho chứa
 import { books as BOOKS_DATA } from '../data/books';
-// Định nghĩa danh mục khớp với dữ liệu trong books.ts
+// Định nghĩa danh mục
 const CATS = ['Kinh doanh', 'Khởi nghiệp', 'Marketing', 'Kinh tế học', 'Phát triển bản thân', 'Tâm lý học'];
 export default function HocQuaSachPage() {
-  // 1. Khai báo tất cả các State cần thiết
   const [activeCategory, setActiveCategory] = useState('Tất cả');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [screenW, setScreenW] = useState(1200);
-  const [player, setPlayer] = useState<any>(null);
-  // 2. Xử lý kích thước màn hình (Responsive)
   useEffect(() => {
     const update = () => setScreenW(window.innerWidth);
     if (typeof window !== 'undefined') {
@@ -21,14 +18,16 @@ export default function HocQuaSachPage() {
     }
   }, []);
   const isMobile = screenW < 768;
-  // 3. Logic Lọc sách (Search + Category)
-  const filteredBooks = BOOKS_DATA.filter(book => {
-    const matchCategory = activeCategory === 'Tất cả' || book.category === activeCategory;
-    const matchSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        book.author.toLowerCase().includes(searchTerm.toLowerCase());
+  // Logic Lọc sách
+  const filteredBooks = BOOKS_DATA.filter((book: any) => {
+    const title = book.title || "";
+    const author = book.author || "";
+    const category = book.category || "";
+    const matchCategory = activeCategory === 'Tất cả' || category === activeCategory;
+    const matchSearch = title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        author.toLowerCase().includes(searchTerm.toLowerCase());
     return matchCategory && matchSearch;
   });
-  // 4. Giao diện Sidebar
   const SidebarInner = () => (
     <div style={{display:'flex',flexDirection:'column',height:'100%',backgroundColor:'#042C53',width:'100%'}}>
       <div style={{padding:'20px',borderBottom:'1px solid rgba(255,255,255,0.1)',display:'flex',alignItems:'center',gap:'8px'}}>
@@ -46,7 +45,7 @@ export default function HocQuaSachPage() {
         >
           Tất cả sách
         </button>
-        {CATS.map(c => (
+        {CATS.map((c) => (
           <button 
             key={c} 
             onClick={() => {setActiveCategory(c); setSidebarOpen(false);}} 
@@ -59,7 +58,7 @@ export default function HocQuaSachPage() {
     </div>
   );
   return (
-    <div style={{display:'flex',height:'100dvh',maxWidth:'1440px',margin:'0 auto',background:'#fff',position:'relative', overflow:'hidden'}}>
+    <div style={{display:'flex',height:'100dvh',maxWidth:'100%',margin:'0 auto',background:'#fff',position:'relative', overflow:'hidden'}}>
       {!isMobile && <div style={{width:'240px',flexShrink:0}}><SidebarInner/></div>}
       {isMobile && sidebarOpen && (
         <div style={{position:'fixed',inset:0,zIndex:50, display:'flex'}}>
@@ -69,7 +68,7 @@ export default function HocQuaSachPage() {
       )}
       <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden', backgroundColor: '#f9fafb'}}>
         <header style={{height:'60px',display:'flex',alignItems:'center',gap:'12px',padding:'0 20px',borderBottom:'1px solid #eee',background:'#fff'}}>
-          {isMobile && <button onClick={()=>setSidebarOpen(true)} style={{background:'none', border:'none', fontSize:'20px'}}>☰</button>}
+          {isMobile && <button onClick={()=>setSidebarOpen(true)} style={{background:'none', border:'none', fontSize:'20px', cursor:'pointer'}}>☰</button>}
           <div style={{flex:1, display:'flex', alignItems:'center', background:'#f3f4f6', padding:'8px 12px', borderRadius:'10px'}}>
             <input 
               placeholder="Tìm tên sách hoặc tác giả..." 
@@ -86,9 +85,9 @@ export default function HocQuaSachPage() {
             <span style={{fontSize:'12px', color:'#9ca3af'}}>{filteredBooks.length} cuốn sách</span>
           </div>
           <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(180px, 1fr))', gap:'20px'}}>
-            {filteredBooks.map((book, idx) => (
-              <div key={idx} style={{cursor:'pointer', group: 'true'}}>
-                <div style={{position:'relative', borderRadius:'14px', overflow:'hidden', aspectRatio:'3/4', backgroundColor: book.bg, marginBottom:'10px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)'}}>
+            {filteredBooks.map((book: any, idx: number) => (
+              <div key={idx} style={{cursor:'pointer'}}>
+                <div style={{position:'relative', borderRadius:'14px', overflow:'hidden', aspectRatio:'3/4', backgroundColor: book.bg || '#ccc', marginBottom:'10px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)'}}>
                   <img src={book.image} alt={book.title} style={{width:'100%', height:'100%', objectFit:'cover', opacity: 0.85}} />
                   <div style={{position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', padding:'15px', textAlign:'center', background:'linear-gradient(to top, rgba(0,0,0,0.4), transparent)'}}>
                     <span style={{color:'white', fontWeight:800, fontSize:'12px', lineHeight: 1.3}}>{book.title}</span>
