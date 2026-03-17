@@ -8,7 +8,7 @@ export default function HocQuaSachPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [screenW, setScreenW] = useState(1200);
   // Danh mục lấy từ ảnh giao diện của bạn
-  const CATS = ['Kinh doanh', 'Tâm lý học', 'Năng suất', 'Lịch sử', 'Triết học'];
+  const CATS = ['Kinh doanh', 'Khởi nghiệp', 'Marketing', 'Kinh tế học', 'Phát triển bản thân','Triết học'];
   useEffect(() => {
     const update = () => setScreenW(window.innerWidth);
     update();
